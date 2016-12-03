@@ -1,7 +1,12 @@
 package com.anand.brose.voicerecorder;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String SCALE = "scale";
     public static final String OUTPUT_DIRECTORY = "VoiceRecorder";
     public static final String OUTPUT_FILENAME = "recorder.mp3";
+    private static final int MY_PERMISSIONS_REQUEST_CODE = 0;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     int scale = 8;
     private GraphView graphView;
     private VoiceRecorder recorder;
@@ -28,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         graphView = (GraphView) findViewById(R.id.graphView);
+        graphView.setGraphColor(Color.rgb(255,255,255));
+        graphView.setCanvasColor(Color.rgb(20,20,20));
+        graphView.setTimeColor(Color.rgb(255, 255, 255));
         recorder = VoiceRecorder.getInstance();
         if (recorder.isRecording()) {
             ((Button) findViewById(R.id.control)).setText(getResources().getString(R.string.stop));
@@ -77,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             graphView.stopPlotting();
             samples = recorder.stopRecording();
             graphView.showFullGraph(samples);
-        } else {
+        } else if(checkRecordPermission()&&checkStoragePermission()){
             graphView.reset();
             String filepath = Environment.getExternalStorageDirectory().getPath();
             File file = new File(filepath, OUTPUT_DIRECTORY);
@@ -88,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
             recorder.startRecording();
             recorder.startPlotting(graphView);
             ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.stop));
+        }else{
+            requestPermissions();
         }
     }
 
@@ -101,6 +113,40 @@ public class MainActivity extends AppCompatActivity {
         if (recorder != null) {
             recorder.release();
         }
+    }
+    public void requestPermissions(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.RECORD_AUDIO)) {
+
+            // Show an explanation to the user *asynchronously* -- don't block
+            // this thread waiting for the user's response! After the user
+            // sees the explanation, try again to request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_CODE);
+
+        } else {
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_CODE);
+            // MY_PERMISSIONS_REQUEST_CODE is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+        }
+    }
+
+    private boolean checkRecordPermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean checkStoragePermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
 }

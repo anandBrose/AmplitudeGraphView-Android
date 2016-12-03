@@ -12,21 +12,50 @@
 
     <com.anand.brose.graphviewlibrary.GraphView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
         android:id="@+id/graphView"
         android:fillViewport="true"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"></com.anand.brose.graphviewlibrary.GraphView>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"></com.anand.brose.graphviewlibrary.GraphView>
+    <Button
+        android:text="+"
+        android:layout_alignParentRight="true"
+        android:alpha="0.8"
+        android:layout_width="40dp"
+        android:id="@+id/zoomIn"
+        android:layout_height="40dp"
+        android:layout_marginRight="5dp"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:textColor="@android:color/background_light"
+        android:layout_marginTop="10dp"
+        android:onClick="zoomIn" />
+    <Button
+        android:text="-"
+        android:layout_width="40dp"
+        android:layout_alignParentRight="true"
+        android:alpha="0.8"
+        android:id="@+id/zoomOu"
+        android:layout_height="40dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="5dp"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:textColor="@android:color/background_light"
+        android:onClick="zoomOut" />
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/record"
         android:id="@+id/control"
         android:paddingBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="47dp"
-        android:onClick="controlClick" />
+        android:onClick="controlClick"
+        android:background="@android:drawable/btn_default"
+        android:textColor="@android:color/background_light"
+        android:layout_height="40dp"
+        android:textAlignment="center"
+        android:backgroundTint="@android:color/holo_red_dark" />
 
 </RelativeLayout>
